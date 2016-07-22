@@ -5,10 +5,7 @@ import { fromWindowDimensions } from './window'
 import { pipe } from './fp'
 import mount from './mount'
 
-
-function log (n) { console.log(n) }
-
-
+// Mario : { x: int, y: int, vx: int, vy: int, dir: LEFT | RIGHT }
 const initialMario = {
     x: 0,
     y: 0,
@@ -17,10 +14,9 @@ const initialMario = {
     dir: LEFT
 }
 
+// ---------- UPDATE ----------
 
-
-// ----- UPDATE
-
+// { delta, arrows } -> Mario -> Mario
 function step ({ delta, arrows }, mario) {
     return pipe(mario, [
                 [gravity, delta],
@@ -30,14 +26,17 @@ function step ({ delta, arrows }, mario) {
             ])
 }
 
+// arrows -> Mario -> Mario
 function jump (arrows, { x, y, vx, vy, dir }) {
     return { x, y, vx, vy: arrows.y > 0 && vy == 0 ? 16.0 : vy, dir }
 }
 
+// delta -> Mario -> Mario
 function gravity (delta, { x, y, vx, vy, dir }) {
     return { x, y, vx, vy: y > 0 ? vy - delta / 4 : 0, dir }
 }
 
+// delta -> Mario -> Mario
 function physics (delta, { x, y, vx, vy, dir }) {
     return { 
         x: x + delta * vx, 
@@ -48,6 +47,7 @@ function physics (delta, { x, y, vx, vy, dir }) {
     }
 }
 
+// arrows -> Mario -> Mario
 function walk (arrows, { x, y, vx, vy, dir }) {
     return { 
         x, 
@@ -58,9 +58,9 @@ function walk (arrows, { x, y, vx, vy, dir }) {
     }
 }
 
+// ---------- DISPLAY ----------
 
-// ----- DISPLAY
-
+// WindowDimensions -> Mario -> VirtualDom
 function display ({ w, h }, mario) {
 
     const verb = mario.y > 0 ? 'jump' : mario.vx !== 0 ? 'walk' : 'stand'
@@ -73,10 +73,9 @@ function display ({ w, h }, mario) {
             ]]
 }
 
+// ---------- SIGNALS ----------
 
-// ----- SIGNALS
-
-// Sig { delta: number, arrows: { x: number, y: number }}
+// Signal { delta, arrows }
 const input = map(
     ([prev, current], arrows) => ({ 
         delta: ((current - prev) / 20) || 0, 
@@ -86,10 +85,10 @@ const input = map(
     fromArrows()
 )
 
-
-
+// Signal Mario
 const states = fold(step, initialMario, input)
 
+// Signal VirtualDom
 const view = map(display, fromWindowDimensions(), states)
 
 mount(document.body, view)
