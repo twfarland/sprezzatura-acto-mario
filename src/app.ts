@@ -23,12 +23,12 @@ const initialMario: Mario = {
 
 // ---------- UPDATE ----------
 
-interface State { 
+interface Inputs { 
     delta: number; 
     arrows: Arrows 
 }
 
-function step ({ delta, arrows }: State, mario: Mario): Mario {
+function step ({ delta, arrows }: Inputs, mario: Mario): Mario {
     return pipe(mario, [
                 [gravity, delta],
                 [jump, arrows],
@@ -82,7 +82,7 @@ function display ({ w, h }: Dimensions, mario: Mario): VDom {
 
 // ---------- SIGNALS ----------
 
-const input: Signal<State> = map(
+const input: Signal<Inputs> = map(
     ([prev, current], arrows) => ({ 
         delta: ((current - prev) / 20) || 0, 
         arrows: arrows || { x: 0, y: 0 }
