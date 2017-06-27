@@ -11,3 +11,6 @@ Then serve the `docs` folder or open the `index.html` file there
 
 #### Live demo
 
+[Here](https://twfarland.github.io/sprezzatura-acto-mario/index.html)
+
+Try comparing the dev tools profiles for this to those of the Elm demo.
