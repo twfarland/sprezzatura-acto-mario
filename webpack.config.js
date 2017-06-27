@@ -3,7 +3,7 @@ module.exports = {
         "js/app.js": "./src/app.ts"
     },
     output: {
-        path: "www/",
+        path: "docs/",
         filename: "[name]"
     },
     resolve: {

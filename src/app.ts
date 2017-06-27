@@ -13,6 +13,7 @@ interface Mario {
     vy: number;
     dir: 'LEFT' | 'RIGHT'; 
 }
+
 const initialMario: Mario = {
     x: 0,
     y: 0,
